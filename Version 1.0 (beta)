@@ -1,0 +1,28 @@
+#include <amxmod>
+#include <amxmisc>
+#include <csstats>
+
+public grenade_throw(index,greindex,wId)
+{
+	new szName[ 33 ];
+	get_user_name( index, szName, charsmax( szName ) - 1 );
+	
+	switch( wId )
+	{
+		case CSW_HEGRENADE:
+		{
+			client_print_color( index, 0, "^1[ ^4NADE RADIO^1 ] The user ^3%s^1 has throw ^4HE^1.", szName ); 		
+		}
+		
+		case CSW_FLASHBANG:
+		{
+			client_print_color( index, 0, "^1[ ^4NADE RADIO^1 ] The user ^3%s^1 has throw ^4FL^1.", szName );		
+		}
+		
+		case CSW_SMOKEGRENADE:
+		{
+			client_print_color( index, 0, "^1[ ^4NADE RADIO^1 ] The user ^3%s^1 has throw ^4SMOKE^1.", szName );		
+		}
+	} 
+		
+}
