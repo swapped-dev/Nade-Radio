@@ -2,27 +2,66 @@
 #include <amxmisc>
 #include <csstats>
 
+const g_msgTextMsg = 77;
+new g_PrefixCvar;
+public plugin_init()
+{
+	register_plugin("Colored Nade Radio", "1.0", "Swapped");
+	
+	g_PrefixCvar = register_cvar("nradio_prefix", "NADE RADIO" );
+	register_message(g_msgTextMsg, "message_TextMsg");
+}
+
 public grenade_throw(index,greindex,wId)
 {
 	new szName[ 33 ];
 	get_user_name( index, szName, charsmax( szName ) - 1 );
 	
+	new szPrefix[ 60 ];
+	get_cvarptr_string( g_PrefixCvar, szPrefix, charsmax( szPrefix ) - 1 );
+	
 	switch( wId )
 	{
 		case CSW_HEGRENADE:
 		{
-			client_print_color( index, 0, "^1[ ^4NADE RADIO^1 ] The user ^3%s^1 has throw ^4HE^1.", szName ); 		
+			client_print_color( index, 0, "^1[ ^4%s^1 ] User ^3%s^1 throw ^4HE^1 grenade.", szPrefix, szName ); 		
 		}
 		
 		case CSW_FLASHBANG:
 		{
-			client_print_color( index, 0, "^1[ ^4NADE RADIO^1 ] The user ^3%s^1 has throw ^4FL^1.", szName );		
+			client_print_color( index, 0, "^1[ ^4%s^1 ] User ^3%s^1 throw ^4FL^1 grenade.", szPrefix, szName );		
 		}
 		
 		case CSW_SMOKEGRENADE:
 		{
-			client_print_color( index, 0, "^1[ ^4NADE RADIO^1 ] The user ^3%s^1 has throw ^4SMOKE^1.", szName );		
+			client_print_color( index, 0, "^1[ ^4%s^1 ] User ^3%s^1 throw ^4SMOKE^1 grenade.", szPrefix, szName );		
 		}
 	} 
 		
+}
+
+
+public message_TextMsg(msg_id, msg_dest, entity) 
+{
+	new string[18], len
+
+	#if !defined NO_STEAM
+	len = get_msg_arg_string(3, string, charsmax(string))
+	#else
+	len = get_msg_arg_string(2, string, charsmax(string))
+	#endif
+
+	if(!(len == 11 && equal(string, "#Game_radio")))
+		return PLUGIN_CONTINUE
+
+	#if !defined NO_STEAM
+	len = get_msg_arg_string(5, string, charsmax(string))
+	#else
+	len = get_msg_arg_string(4, string, charsmax(string))
+	#endif
+
+	if(!(len == 17 && equal(string, "#Fire_in_the_hole")))
+		return PLUGIN_CONTINUE
+
+	return PLUGIN_HANDLED
 }
